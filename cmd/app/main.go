@@ -21,7 +21,9 @@ func port() string {
 
 func newRouter() *gin.Engine {
 	r := gin.New()
-	r.Use(gin.Logger(), gin.Recovery())
+	// KEEP THIS: one log line per request (status + duration) is what the workspace Monitoring tab charts.
+	// requestLog (requestlog.go) replaces gin.Logger(), so each request is logged once as JSON.
+	r.Use(requestLog(), gin.Recovery())
 
 	r.GET("/health", func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{"status": "ok"})
